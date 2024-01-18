@@ -23,10 +23,12 @@ def getHeader(source_name, source_title, content):
 while True:
     [content, id, source_title, source_name] = load.selectOne()
     header = getHeader(source_name, source_title, content)
-    header_embedding = embedding.get_embedding(header)
-    header_embedding_vector = header_embedding.data[0].embedding
-    token = header_embedding.usage.total_tokens
-    print(id, token)
+    if header == None:
+        header_embedding_vector = None
+    else:
+        header_embedding = embedding.get_embedding(header)
+        header_embedding_vector = header_embedding.data[0].embedding
+    print(id)
     load.storeEmbedding(int(id), header_embedding_vector)
     if True:
         print('success input data')
