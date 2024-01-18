@@ -17,24 +17,25 @@ def selectOne():
   cursor = conn.cursor()
 
   # Execute a SELECT query to fetch one row
-  query = "SELECT content, source_title, data.id FROM data INNER JOIN source_metadata ON data.source_id = source_metadata.id WHERE embedding is NULL LIMIT 1"
+  query = "SELECT content, source_title, source_name, data.id FROM data INNER JOIN source_metadata ON data.source_id = source_metadata.id WHERE header_embedding is NULL LIMIT 1"
   cursor.execute(query)
 
   # Fetch the first row from the result set
-  [content, source_title, id] = cursor.fetchone()
+  [content, source_title, source_name, id] = cursor.fetchone()
   content = source_title + '\n' + content
+  
 
   cursor.close()
   conn.close()
-  return [content , id]
+  return [content, id, source_title, source_name]
 
-def storeEmbedding(id, embedding, total_tokens):
+def storeEmbedding(id, embedding):
   conn = psycopg2.connect(**db_params)
   cursor = conn.cursor()
-  update_query = "UPDATE data SET embedding = %s, total_tokens = %s WHERE id = %s;"
+  update_query = "UPDATE data SET header_embedding = %s WHERE id = %s;"
 
   # Execute the update query
-  cursor.execute(update_query, (embedding, total_tokens, id))
+  cursor.execute(update_query, (embedding, id))
 
   # Commit the changes
   conn.commit()

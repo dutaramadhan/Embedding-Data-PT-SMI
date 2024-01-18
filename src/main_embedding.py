@@ -11,4 +11,4 @@ while True:
     load.storeEmbedding(int(id), embedding_vector, int(token))
     if True:
         print('success input data')
-    time.sleep(20)
+    time.sleep(60/500)
